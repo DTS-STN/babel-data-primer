@@ -31,4 +31,4 @@ The result of this step is a list of objects representing "Persons", which can b
 
 ### Step 3: Storing the data
 
-Once the "Persons" are all generated from the raw data, we simply need to store it in the appropriate database. The connection string for the database is a config setting. Each stored person will be used as a data point in the PDE.
+Once the "Persons" are all generated from the raw data, we simply need to store it in the simulation storage using the simulation API. The simulation engine URL is another config variable. It will call the `POST /Persons` endpoint with a list of the "persons" that will be stored. 

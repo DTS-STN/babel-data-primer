@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DataPrimer.Storage
+namespace DataPrimer.Simulation
 {
+    // TODO: Want to replace this with Nuget package
     public partial class Persons
     {
         public Guid Id { get; set; }

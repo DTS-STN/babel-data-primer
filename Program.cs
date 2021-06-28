@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using DataPrimer.Models;
 using DataPrimer.Helpers;
 using DataPrimer.Rules;
-using DataPrimer.Storage;
+using DataPrimer.Simulation;
 
 namespace DataPrimer
 {
@@ -18,14 +18,14 @@ namespace DataPrimer
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .Build();
-            var rulesUrl = config.GetValue<string>("RulesUrl");
-            var connectionString = config.GetConnectionString("DefaultDB");
+            var rulesUrl = config["RulesUrl"];
+            var simUrl = config["SimulationUrl"];
 
             // DI
             ILogInfo logger = new ConsoleLogger();
             IFetchData fetcher = new MockFetcher(2);
             IProcessData processor = InitProcessor(rulesUrl);
-            IStoreData storer = InitStorer(connectionString);
+            IStoreData storer = InitStorer(simUrl);
 
             // Execution
             logger.Print("Running the Data primer...");
@@ -58,9 +58,10 @@ namespace DataPrimer
             return processor;
         }
 
-        private static IStoreData InitStorer(string connectionString) {
-            var dbContext = new AppDbContext(connectionString);
-            IStoreData storer = new SimulationEFStore(dbContext);
+        private static IStoreData InitStorer(string simulationUrl) {
+            var restClient = new RestSharp.RestClient();
+            var simApi = new SimulationApi(restClient, simulationUrl);
+            IStoreData storer = new SimulationStore(simApi);
             return storer;
         }
     }

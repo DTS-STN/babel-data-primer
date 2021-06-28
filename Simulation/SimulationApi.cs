@@ -7,19 +7,19 @@ using RestSharp.Serializers.NewtonsoftJson;
 
 using DataPrimer.Api;
 
-namespace DataPrimer.Rules
+namespace DataPrimer.Simulation
 {
-    public class RulesApi
+    public class SimulationApi
     {
         private readonly IRestClient _client;
 
-        public RulesApi(IRestClient client, string url) {
+        public SimulationApi(IRestClient client, string url) {
             _client = client;
             _client.BaseUrl = new Uri(url);
             _client.UseNewtonsoftJson();
         }
 
-        public W Execute<W>(string endpoint, object request, string propName) {
+        public string Execute(string endpoint, object request) {
             var restRequest = new RestRequest(endpoint, DataFormat.Json);
 
             restRequest.AddJsonBody(request);
@@ -30,10 +30,10 @@ namespace DataPrimer.Rules
             }
  
             // Parsing JSON content into element-node JObject
-            var jObject = JObject.Parse(response.Content);
-            var result = jObject.Value<W>(propName);
+            //var jObject = JObject.Parse(response.Content);
+            //var result = jObject.Value<W>(propName);
 
-            return result;
+            return "Ok";
         }
 
     }

@@ -1,4 +1,5 @@
 using DataPrimer.Models;
+using DataPrimer.Api;
 
 namespace DataPrimer.Rules
 {
