@@ -15,7 +15,7 @@ namespace DataPrimer.Simulation
             _api = api;
         }
         
-        public void Store(List<Persons> persons) {
+        public void Store(List<Person> persons) {
             _api.Execute("Persons", persons);
         }
     }

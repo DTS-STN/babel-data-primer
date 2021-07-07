@@ -2,41 +2,48 @@ using System;
 using DataPrimer.Models;
 using DataPrimer.Helpers;
 using DataPrimer.Simulation;
+using DataPrimer.Rules;
+
+using esdc_rules_classes.BestWeeks;
+using esdc_rules_classes.AverageIncome;
+using esdc_simulation_classes.MaternityBenefits;
+using esdc_simulation_classes;
+
 
 namespace DataPrimer
 {
     public class DataProcessor : IProcessData
     {
-        private readonly IGetBestWeeks _bestWeeksGetter;
-        private readonly IGetAverageIncome _averageIncomeGetter;
+        private readonly IRulesEngine _rules;
 
-        public DataProcessor(IGetBestWeeks bestWeeksGetter, IGetAverageIncome averageIncomeGetter) {
-            _bestWeeksGetter = bestWeeksGetter;
-            _averageIncomeGetter = averageIncomeGetter;
+        public DataProcessor(IRulesEngine rules) {
+            _rules = rules;
         }
         
-        public Persons Process(ProcessedApplication processedApplication) {
+        public Person Process(ProcessedApplication processedApplication) {
             var bestWeeksRequest = new BestWeeksRequest() {
                 PostalCode = processedApplication.Person.PostalCode
             };
-            var numBestWeeks = _bestWeeksGetter.Get(bestWeeksRequest);
+            var numBestWeeks = _rules.GetBestWeeks(bestWeeksRequest);
 
             var averageIncomeRequest = new AverageIncomeRequest() {
                 Roe = processedApplication.Roe,
                 ApplicationDate = processedApplication.ApplicationDate,
                 NumBestWeeks = numBestWeeks
             };
-            var averageIncome = _averageIncomeGetter.Get(averageIncomeRequest);
+            var averageIncome = _rules.GetAverageIncome(averageIncomeRequest);
 
-            var result = new Persons() {
-                Id = Guid.NewGuid(),
+            var result = new Person() {
                 Age = processedApplication.Person.Age,
-                Flsah = processedApplication.Person.Flsah,
-                AverageIncome = averageIncome
+                AverageIncome = averageIncome,
+                SpokenLanguage = processedApplication.Person.LanguageSpoken,
+                EducationLevel = processedApplication.Person.EducationLevel,
+                Province = processedApplication.Person.Province
             };
 
             return result;
         }
+
     }
 }
 

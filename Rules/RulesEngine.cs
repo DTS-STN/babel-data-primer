@@ -1,5 +1,5 @@
-using DataPrimer.Models;
-using DataPrimer.Api;
+using esdc_rules_classes.BestWeeks;
+using esdc_rules_classes.AverageIncome;
 
 namespace DataPrimer.Rules
 {
@@ -12,13 +12,13 @@ namespace DataPrimer.Rules
         }
 
         public int GetBestWeeks(BestWeeksRequest req) {
-            var result = _api.Execute<int>("BestWeeks", req, "numBestWeeks");
-            return result;
+            var result = _api.Execute<BestWeeksResponse>("BestWeeks", req, "numBestWeeks");
+            return result.NumBestWeeks;
         }
 
         public decimal GetAverageIncome(AverageIncomeRequest req) {
-            var result = _api.Execute<int>("AverageIncome", req, "averageIncome");
-            return result;
+            var result = _api.Execute<AverageIncomeResponse>("AverageIncome", req, "averageIncome");
+            return result.AverageIncome;
         }
     }
 }

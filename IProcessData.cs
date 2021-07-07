@@ -7,6 +7,6 @@ namespace DataPrimer
 {
     public interface IProcessData
     {
-        Persons Process(ProcessedApplication processedApplication);
+        Person Process(ProcessedApplication processedApplication);
     }
 }

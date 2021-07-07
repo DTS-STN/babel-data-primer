@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using DataPrimer.Models;
 
+using esdc_rules_classes.AverageIncome;
+
 namespace DataPrimer.Mocks
 {
     public static class MockCreator
@@ -20,7 +22,7 @@ namespace DataPrimer.Mocks
                 ApplicationDate = applicationDate,
                 Person = new ApplicationPerson() {
                     PostalCode = GeneratePostalCode(),
-                    Flsah = GenerateFlsah(),
+                    //Flsah = GenerateFlsah(),
                     Age = GenerateAge(),
                 }
             };
@@ -33,7 +35,7 @@ namespace DataPrimer.Mocks
             return sunday;
         }
 
-        private static Roe GenerateMonthlyRoe(DateTime applicationDate) {
+        private static SimpleRoe GenerateMonthlyRoe(DateTime applicationDate) {
             var ppType = GeneratePPType();
             var rnd = new Random();
             
@@ -47,7 +49,7 @@ namespace DataPrimer.Mocks
 
             var lastDayInMonth = DateTime.DaysInMonth(2021, finalMonth);
             
-            return new Roe() {
+            return new SimpleRoe() {
                 PayPeriodType = ppType,
                 PayPeriods = payPeriods,
                 FinalPayPeriodDay = new DateTime(DateTime.Now.Year, finalMonth, lastDayInMonth),
@@ -56,7 +58,7 @@ namespace DataPrimer.Mocks
             };
         }
 
-        private static Roe GenerateRoe(string ppType, DateTime applicationDate) {
+        private static SimpleRoe GenerateRoe(string ppType, DateTime applicationDate) {
             if (ppType == "monthly") {
                 return GenerateMonthlyRoe(applicationDate);
             }
@@ -75,10 +77,7 @@ namespace DataPrimer.Mocks
             var rnd = new Random();
             
             for (int i = 0; i < numPeriods; i++) {
-                var nextPP = new PayPeriod() {
-                    Amount = rnd.Next(min, max),
-                    PayPeriodNumber = i + 1
-                };
+                var nextPP = new PayPeriod(i+1, rnd.Next(min, max));
                 result.Add(nextPP);
             }
 

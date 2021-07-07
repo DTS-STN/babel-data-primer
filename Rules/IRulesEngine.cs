@@ -1,4 +1,5 @@
-using DataPrimer.Models;
+using esdc_rules_classes.BestWeeks;
+using esdc_rules_classes.AverageIncome;
 
 namespace DataPrimer.Rules
 {

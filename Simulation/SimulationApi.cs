@@ -26,12 +26,10 @@ namespace DataPrimer.Simulation
             var response = _client.Post(restRequest);
 
             if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-                throw new ApiException(response.ErrorMessage);
+                var jObject = JObject.Parse(response.Content);
+                var errorMessage = jObject.Value<string>("error");
+                throw new ApiException(errorMessage);
             }
- 
-            // Parsing JSON content into element-node JObject
-            //var jObject = JObject.Parse(response.Content);
-            //var result = jObject.Value<W>(propName);
 
             return "Ok";
         }

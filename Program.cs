@@ -7,6 +7,8 @@ using DataPrimer.Helpers;
 using DataPrimer.Rules;
 using DataPrimer.Simulation;
 
+using DataPrimer.Storage;
+
 namespace DataPrimer
 {
     class Program
@@ -20,16 +22,21 @@ namespace DataPrimer
                 .Build();
             var rulesUrl = config["RulesUrl"];
             var simUrl = config["SimulationUrl"];
+            var connString = config["DefaultDb"];
 
             // DI
             ILogInfo logger = new ConsoleLogger();
-            IFetchData fetcher = new MockFetcher(2);
+            
             IProcessData processor = InitProcessor(rulesUrl);
             IStoreData storer = InitStorer(simUrl);
+            
+            //IFetchData fetcher = new MockFetcher(2);
+            var context = new BabeldbContext(connString);
+            IFetchData fetcher = new DbFetcher(context, 100);
 
             // Execution
             logger.Print("Running the Data primer...");
-            var persons = new List<Persons>();
+            var persons = new List<Person>();
 
             logger.Print("Fetching raw data");
             var applications = fetcher.FetchApplications();
@@ -37,12 +44,16 @@ namespace DataPrimer
 
             logger.Print("Processing data");
             foreach (var application in applications) {
-                var nextPerson = processor.Process(application);
-                logger.Print($"Processed: {nextPerson.Id}");
-                persons.Add(nextPerson);
+                try {
+                    var nextPerson = processor.Process(application);
+                    //logger.Print($"Processed...");
+                    persons.Add(nextPerson);
+                } catch (Exception e) {
+                    logger.Print($"Error: {e.Message}");
+                } 
             }
             
-            logger.Print("Storing data");
+            logger.Print($"Storing data ({persons.Count})");
             storer.Store(persons);
 
             logger.Print("Data Primer complete");
@@ -52,9 +63,7 @@ namespace DataPrimer
             var restClient = new RestSharp.RestClient();
             var rulesApi = new RulesApi(restClient, rulesUrl);
             var rulesEngine = new RulesEngine(rulesApi);
-            var averageIncomeGetter = new AverageIncomeGetter(rulesEngine);
-            var bestWeeksGetter = new BestWeeksGetter(rulesEngine);
-            IProcessData processor = new DataProcessor(bestWeeksGetter, averageIncomeGetter);
+            IProcessData processor = new DataProcessor(rulesEngine);
             return processor;
         }
 

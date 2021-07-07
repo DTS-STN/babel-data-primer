@@ -5,6 +5,6 @@ namespace DataPrimer
 {
     public interface IStoreData
     {
-         void Store(List<Persons> persons);
+         void Store(List<Person> persons);
     }
 }
