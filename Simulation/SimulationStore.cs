@@ -1,8 +1,7 @@
 
 using System.Collections.Generic;
-using System.Linq;
-using DataPrimer.Models;
-using DataPrimer.Api;
+
+using esdc_simulation_classes.MaternityBenefits;
 
 namespace DataPrimer.Simulation
 {
@@ -15,7 +14,7 @@ namespace DataPrimer.Simulation
             _api = api;
         }
         
-        public void Store(List<Person> persons) {
+        public void Store(List<MaternityBenefitsPersonRequest> persons) {
             _api.Execute("Persons", persons);
         }
     }

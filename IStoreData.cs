@@ -1,10 +1,11 @@
 using System.Collections.Generic;
-using DataPrimer.Simulation;
+
+using esdc_simulation_classes.MaternityBenefits;
 
 namespace DataPrimer
 {
     public interface IStoreData
     {
-         void Store(List<Person> persons);
+         void Store(List<MaternityBenefitsPersonRequest> persons);
     }
 }

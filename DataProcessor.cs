@@ -20,7 +20,7 @@ namespace DataPrimer
             _rules = rules;
         }
         
-        public Person Process(ProcessedApplication processedApplication) {
+        public MaternityBenefitsPersonRequest Process(ProcessedApplication processedApplication) {
             var bestWeeksRequest = new BestWeeksRequest() {
                 PostalCode = processedApplication.Person.PostalCode
             };
@@ -33,7 +33,7 @@ namespace DataPrimer
             };
             var averageIncome = _rules.GetAverageIncome(averageIncomeRequest);
 
-            var result = new Person() {
+            var result = new MaternityBenefitsPersonRequest() {
                 Age = processedApplication.Person.Age,
                 AverageIncome = averageIncome,
                 SpokenLanguage = processedApplication.Person.LanguageSpoken,

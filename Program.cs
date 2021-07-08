@@ -2,12 +2,12 @@
 using System.IO;
 using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
-using DataPrimer.Models;
 using DataPrimer.Helpers;
 using DataPrimer.Rules;
 using DataPrimer.Simulation;
-
 using DataPrimer.Storage;
+
+using esdc_simulation_classes.MaternityBenefits;
 
 namespace DataPrimer
 {
@@ -36,7 +36,7 @@ namespace DataPrimer
 
             // Execution
             logger.Print("Running the Data primer...");
-            var persons = new List<Person>();
+            var persons = new List<MaternityBenefitsPersonRequest>();
 
             logger.Print("Fetching raw data");
             var applications = fetcher.FetchApplications();
