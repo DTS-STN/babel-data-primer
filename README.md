@@ -1,6 +1,6 @@
 # Maternity Benefits Policy Difference Engine Data Primer
 
-This is a console application that is responsible for populating the database that is used by the Maternity Benefits policy difference engine (PDE). It can generate mock data or it can process real, raw data into something usable.
+This is a console application that is responsible for populating the database that is used by the Maternity Benefits policy difference engine (PDE). It fetches data from a custom filtered dataset, processes it into something directly usable by the PDE, and sends it to the PDE for storage to be used by subsequent simulations. 
 
 ## Flow
 
