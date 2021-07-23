@@ -1,8 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace DataPrimer.Storage
+namespace DataPrimer.Fetching
 {
     public partial class BabeldbContext : DbContext
     {

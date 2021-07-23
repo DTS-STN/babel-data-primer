@@ -3,25 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 
 using DataPrimer.Models;
-using DataPrimer.Mocks;
 using esdc_rules_classes.AverageIncome;
 
-namespace DataPrimer.Storage
+namespace DataPrimer.Fetching
 {
     public class DbFetcher : IFetchData
     {
-        private readonly int _amount;
         private readonly BabeldbContext _context;
-        public DbFetcher(BabeldbContext context, int amount) {
-            _amount = amount;
+        public DbFetcher(BabeldbContext context) {
             _context = context;
         }
-        public List<ProcessedApplication> FetchApplications() {
-            var result = new List<ProcessedApplication>();
+        public List<ApplicationToProcess> FetchApplications(int maxAmountToFetch) {
+            var result = new List<ApplicationToProcess>();
             var apps = _context.CliRoe.ToList();
             var allEarnings = _context.Earnings.ToList();
 
-            var appSubset = apps.Take(_amount);
+            var appSubset = apps.Take(maxAmountToFetch);
 
             foreach (var app in appSubset) {
                 var earnings = allEarnings.Where(d => d.RoeId == app.RoeId);
@@ -52,12 +49,12 @@ namespace DataPrimer.Storage
 
                 var appDate = app.ApplicationStartedDate;
 
-                var nextRes = new ProcessedApplication() {
+                var nextRes = new ApplicationToProcess() {
                     Roe = nextRoe,
                     Person = nextPerson,
                     ApplicationDate = appDate
                 };
-
+                
                 result.Add(nextRes);
             }
 

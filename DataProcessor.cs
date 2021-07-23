@@ -20,25 +20,25 @@ namespace DataPrimer
             _rules = rules;
         }
         
-        public MaternityBenefitsPersonRequest Process(ProcessedApplication processedApplication) {
+        public MaternityBenefitsPersonRequest Process(ApplicationToProcess application) {
             var bestWeeksRequest = new BestWeeksRequest() {
-                PostalCode = processedApplication.Person.PostalCode
+                PostalCode = application.Person.PostalCode
             };
             var numBestWeeks = _rules.GetBestWeeks(bestWeeksRequest);
 
             var averageIncomeRequest = new AverageIncomeRequest() {
-                Roe = processedApplication.Roe,
-                ApplicationDate = processedApplication.ApplicationDate,
+                Roe = application.Roe,
+                ApplicationDate = application.ApplicationDate,
                 NumBestWeeks = numBestWeeks
             };
             var averageIncome = _rules.GetAverageIncome(averageIncomeRequest);
 
             var result = new MaternityBenefitsPersonRequest() {
-                Age = processedApplication.Person.Age,
+                Age = application.Person.Age,
                 AverageIncome = averageIncome,
-                SpokenLanguage = processedApplication.Person.LanguageSpoken,
-                EducationLevel = processedApplication.Person.EducationLevel,
-                Province = processedApplication.Person.Province
+                SpokenLanguage = application.Person.LanguageSpoken,
+                EducationLevel = application.Person.EducationLevel,
+                Province = application.Person.Province
             };
 
             return result;

@@ -5,8 +5,9 @@ using DataPrimer.Models;
 
 namespace DataPrimer
 {
+    // Interface for the Fetching Step
     public interface IFetchData
     {
-         List<ProcessedApplication> FetchApplications();
+         List<ApplicationToProcess> FetchApplications(int maxAmountToFetch);
     }
 }

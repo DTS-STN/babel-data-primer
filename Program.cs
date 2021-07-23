@@ -5,7 +5,7 @@ using Microsoft.Extensions.Configuration;
 using DataPrimer.Helpers;
 using DataPrimer.Rules;
 using DataPrimer.Simulation;
-using DataPrimer.Storage;
+using DataPrimer.Fetching;
 
 using esdc_simulation_classes.MaternityBenefits;
 
@@ -15,7 +15,7 @@ namespace DataPrimer
     {
         static void Main(string[] args)
         {
-            // Read config
+            // Config
             IConfiguration config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
@@ -23,42 +23,43 @@ namespace DataPrimer
             var rulesUrl = config["RulesUrl"];
             var simUrl = config["SimulationUrl"];
             var connString = config["DefaultDb"];
+            int maxAmountToFetch = 100;
 
-            // DI
+            // Dependency Injection
             ILogInfo logger = new ConsoleLogger();
-            
             IProcessData processor = InitProcessor(rulesUrl);
             IStoreData storer = InitStorer(simUrl);
-            
-            //IFetchData fetcher = new MockFetcher(2);
             var context = new BabeldbContext(connString);
-            IFetchData fetcher = new DbFetcher(context, 100);
+            IFetchData fetcher = new DbFetcher(context);
 
             // Execution
             logger.Print("Running the Data primer...");
             var persons = new List<MaternityBenefitsPersonRequest>();
 
+            // Step 1: Fetch the Data
             logger.Print("Fetching raw data");
-            var applications = fetcher.FetchApplications();
+            var applications = fetcher.FetchApplications(maxAmountToFetch);
             logger.Print($"Number of applications: {applications.Count}");
 
+            // Step 2: Process the data using the rules engine
             logger.Print("Processing data");
             foreach (var application in applications) {
                 try {
                     var nextPerson = processor.Process(application);
-                    //logger.Print($"Processed...");
                     persons.Add(nextPerson);
                 } catch (Exception e) {
                     logger.Print($"Error: {e.Message}");
                 } 
             }
             
+            // Step 3: Store the data
             logger.Print($"Storing data ({persons.Count})");
             storer.Store(persons);
 
             logger.Print("Data Primer complete");
         }
 
+        /*** DI Helpers ***/
         private static IProcessData InitProcessor(string rulesUrl) {
             var restClient = new RestSharp.RestClient();
             var rulesApi = new RulesApi(restClient, rulesUrl);

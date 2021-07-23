@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 
-namespace DataPrimer.Storage
+namespace DataPrimer.Fetching
 {
     public partial class CliRoe
     {

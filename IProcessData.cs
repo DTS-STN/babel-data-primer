@@ -7,8 +7,9 @@ using esdc_simulation_classes.MaternityBenefits;
 
 namespace DataPrimer
 {
+    // Interface for the Processing Step
     public interface IProcessData
     {
-        MaternityBenefitsPersonRequest Process(ProcessedApplication processedApplication);
+        MaternityBenefitsPersonRequest Process(ApplicationToProcess application);
     }
 }
