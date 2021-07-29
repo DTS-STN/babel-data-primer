@@ -30,6 +30,8 @@ Once the Data Primer has made the two calls and obtained the AWI, it packages it
 ### Step 3: Storing the Data
 Now that the data has been processed to meet the requirements for the PDE, we need to store it in the PDE DB. This is a relatively straightforward step that involves passing the data directly to the Simulation Engine (via Web API request), so that the simulation engine can store it.
 
+Note that the storage step does not *replace* the data that  already exists in the simulation database; it simply appends it. So if you want a blank slate of data, then you will need to clear the database. There is a call in the Simulation API that can handle this.
+
 
 ## Usage
 The Data Primer does not need to be run very often. It only needs to be run when the data required by the PDE needs to be updated. This may include (but are not limited to) the following reasons:

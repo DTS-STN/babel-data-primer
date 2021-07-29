@@ -18,7 +18,9 @@ namespace DataPrimer.Fetching
             var apps = _context.CliRoe.ToList();
             var allEarnings = _context.Earnings.ToList();
 
-            var appSubset = apps.Take(maxAmountToFetch);
+            var appSubset = apps
+                .OrderBy(x => Guid.NewGuid())
+                .Take(maxAmountToFetch);
 
             foreach (var app in appSubset) {
                 var earnings = allEarnings.Where(d => d.RoeId == app.RoeId);
