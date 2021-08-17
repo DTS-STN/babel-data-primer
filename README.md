@@ -10,7 +10,25 @@ The raw data is currently stored in the data lake in the NEIW and RoE databases.
 One of these tables contains application/client/RoE data. The other contains the pay period earnings for the associated RoE. There is a foreign key relationship on the RoE ID between these two tables, which will be used by the data primer to associate the RoE with the earnings.
 
 ### Step 0b: Exporting/Importing the Custom Tables
-Once the custom tables have been generated from the SQL queries, the data must be exported from the data lake, and then imported into our own database (to which the Data Primer will connect). This can be done using the export and import tools in the various SQL management clients (Oracle SQL Developer, SSMS, etc). The tables can be exported as CSV and then imported into our own database.
+Once the custom tables have been generated from the SQL queries, the data must be exported from the data lake, and then imported into our own database (to which the Data Primer will connect). This can be done using the export and import tools in the various SQL management clients (Oracle SQL Developer, SSMS, etc). The tables can be exported as CSV and then imported into our own database. Note that this needs to be done with the *two* custom tables that are generated (temp_babel_cli_roe, temp_babel_roe_earnings).
+
+Steps to Export from Oracle: 
+- Tools > Database Export
+- Choose your connection
+- Uncheck Export DDL
+- Check Export Data
+- Format: csv, use header, keep defaults
+- Save as single file, and select the file location
+- Types to export: Tables
+- Specify Data: Search for your table (temp_babel_cli_roe) and select it
+
+Steps to import into SSMS:
+- Connect to server
+- Right-click on server in the Object explorer, find 'Tasks', and select 'Import Flat File'
+- Choose the csv file. Use the defaults (ensure table names are 'cli_roe' and 'earnings')
+- Import the data
+
+The import is not exact and you may need to do a little bit more filtering on the data once it is in (e.g. removing rows with certain null values). Some of these errors may pop up in the data fetching phase, where the Data Primer will error out. On the import, you may need to customize the data types that get imported in order for it to run properly.
 
 
 ### Step 1: Data fetching
