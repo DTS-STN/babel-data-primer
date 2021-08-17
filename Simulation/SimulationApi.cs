@@ -11,23 +11,24 @@ namespace DataPrimer.Simulation
     public class SimulationApi
     {
         private readonly IRestClient _client;
+        private readonly string _password;
 
-        public SimulationApi(IRestClient client, string url) {
+        public SimulationApi(IRestClient client, string url, string password) {
             _client = client;
             _client.BaseUrl = new Uri(url);
             _client.UseNewtonsoftJson();
+            _password = password;
         }
 
         public string Execute(string endpoint, object request) {
             var restRequest = new RestRequest(endpoint, DataFormat.Json);
 
             restRequest.AddJsonBody(request);
+            restRequest.AddHeader("password", _password);
             var response = _client.Post(restRequest);
 
             if (response.StatusCode != System.Net.HttpStatusCode.OK) {
-                var jObject = JObject.Parse(response.Content);
-                var errorMessage = jObject.Value<string>("error");
-                throw new ApiException(errorMessage);
+                throw new ApiException(response.Content);
             }
 
             return "Ok";

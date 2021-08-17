@@ -23,12 +23,13 @@ namespace DataPrimer
             var rulesUrl = config["RulesUrl"];
             var simUrl = config["SimulationUrl"];
             var connString = config["DefaultDb"];
-            int maxAmountToFetch = 100;
+            var password = config["SimulationPassword"];
+            int maxAmountToFetch = 2000;
 
             // Dependency Injection
             ILogInfo logger = new ConsoleLogger();
             IProcessData processor = InitProcessor(rulesUrl);
-            IStoreData storer = InitStorer(simUrl);
+            IStoreData storer = InitStorer(simUrl, password);
             var context = new BabeldbContext(connString);
             IFetchData fetcher = new DbFetcher(context);
 
@@ -68,9 +69,9 @@ namespace DataPrimer
             return processor;
         }
 
-        private static IStoreData InitStorer(string simulationUrl) {
+        private static IStoreData InitStorer(string simulationUrl, string password) {
             var restClient = new RestSharp.RestClient();
-            var simApi = new SimulationApi(restClient, simulationUrl);
+            var simApi = new SimulationApi(restClient, simulationUrl, password);
             IStoreData storer = new SimulationStore(simApi);
             return storer;
         }
