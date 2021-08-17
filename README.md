@@ -61,5 +61,6 @@ Since the Data Primer is a console application that should only need to be run r
 - RulesUrl: This is the Url for the Rules Engine API
 - SimulationUrl: Url for the Simulation Engine API
 - DefaultDB: Connection string for the Database that stores the custom tables that are queried during the fetching step
+- SimulationPassword: The Simulation engine's endpoint for storing data points is password-protected. Add the password to this config setting so that the password is injected into the header of the request to the simulation engine. The password must be the same as what is deployed for the simulation engine you are targeting. If you are targeting a locally-running simulation engine for testing and development, you can just set this manually. If you are targeting a deployed instance of the simulation engine, you will need to locate the config setting for the deployed engine (e.g. in the Azure App Service Configuration settings)
 
 
