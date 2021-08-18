@@ -11,9 +11,9 @@ namespace DataPrimer.Fetching
         public int YearOfBirth { get; set; }
         public int GenderId { get; set; }
         public string Gender { get; set; }
-        public string EducationLevelId { get; set; }
+        public int EducationLevelId { get; set; }
         public string EducationLevel { get; set; }
-        public string LanguageId { get; set; }
+        public int LanguageId { get; set; }
         public string LanguageSpoken { get; set; }
         public string Municipality { get; set; }
         public string PostalCode { get; set; }

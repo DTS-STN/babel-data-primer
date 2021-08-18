@@ -30,7 +30,9 @@ FROM v_roes_roe
 WHERE date_created > DATE '2019-01-01' -- Only records after Jan 1, 2019
 AND employee_uid IS NOT NULL
 AND pyprdtp__id IN (23,25,22,28) -- Only "Regular" payment types
-AND total_insurable_hour_nbr > 600; -- Minimum requirement for maternity
+AND total_insurable_hour_nbr > 600 -- Minimum requirement for maternity
+AND final_pay_period_end_date IS NOT NULL
+AND first_day_worked_date IS NOT NULL;
 
 --SELECT COUNT(*) FROM temp_babel_roes;
 
@@ -69,6 +71,7 @@ SELECT COUNT(*) FROM temp_babel_join;
 
 
 -- STEP 5: Take a smaller subset of the data
+-- Adjust the Sample() argument as needed
 DROP TABLE temp_babel_join_subset;
 CREATE TABLE temp_babel_join_subset 
 AS
@@ -90,11 +93,11 @@ SELECT
     -- Client information
     cli.person_uid,
     cli.yob AS year_of_birth,
-    cli.gender__id AS gender_id,
+    CAST(cli.gender__id AS int) AS gender_id,
     gen.ENGLISH_NAME AS gender,
-    cli.education_level__id AS education_level_id,
+    CAST(cli.education_level__id AS int) AS education_level_id,
     edu.ENGLISH_NAME AS education_level,
-    cli.language__id_spoken AS language_id,
+    CAST(cli.language__id_spoken AS int) AS language_id,
     lan.ENGLISH_NAME AS language_spoken,
     
     -- Postal code
@@ -103,7 +106,7 @@ SELECT
     prov.ENGLISH_NAME AS province,
     
     -- RoE info
-    roe.pyprdtp__id AS pay_period_type_id,
+    CAST(roe.pyprdtp__id AS int) AS pay_period_type_id,
     ppt.PAY_PERIOD_TYPE_NAME_EN AS pay_period_type,
     roe.final_pay_period_end_date,
     roe.first_day_worked_date,
@@ -141,7 +144,7 @@ SELECT COUNT(*) from temp_babel_roe_earnings;
 -- STEP 8: Export the two tables (temp_babel_cli_roe and temp_babel_roe_earnings) to csv and import into your own DB
 /*
 EXPORT:
-- Tools> Database Export
+- Tools > Database Export
 - Choose your connection
 - Uncheck Export DDL
 - Check Export Data
@@ -154,5 +157,6 @@ IMPORT (into SSMS):
 - Connect to server
 - Right-click on server in the Object explorer, find 'Tasks', and select 'Import Flat File'
 - Choose the csv file. Use the defaults (ensure table names are 'cli_roe' and 'earnings'
+- Ensure some of the ID fields get mapped as int types: language_id, gender_id, education_level_id
 - Import the data
 */
