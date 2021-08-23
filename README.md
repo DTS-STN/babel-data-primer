@@ -27,7 +27,7 @@ Steps to import into SSMS:
 - Right-click on server in the Object explorer, find 'Tasks', and select 'Import Flat File'
 - Choose the csv file. (using the table names 'cli_roe' and 'earnings')
 - Ensure "Use Rich Data Type Detection" on Preview Data is selected (this should help with data type conversions)
-- Change the data types of `EducationLevelId` and `LanguageId` to `nvarchar(50)` and any integer variants to `int`
+- Change the data types of `EDUCATION_LEVEL_ID`, `LANGUAGE_ID`, and `PAY_PERIOD_NBR` to `nvarchar(50)` and any other integer variants to `int`
 - Import the data
 
 The import is not exact and you may need to do a little bit more filtering on the data once it is in (e.g. removing rows with certain null values). Some of these errors may pop up in the data fetching phase, where the Data Primer will error out. On the import, you may need to customize the data types that get imported in order for it to run properly.
